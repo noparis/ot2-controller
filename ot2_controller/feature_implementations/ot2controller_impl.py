@@ -5,6 +5,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+import os
+
 import paramiko
 from paramiko.client import SSHClient
 from paramiko.pkey import PKey
@@ -155,6 +157,25 @@ class Ot2ControllerImpl(Ot2ControllerBase):
         return CameraMovie_Response(
             VideoData=open("/tmp/tmp_video.mp4", "rb").read(), VideoTimestamp=datetime.now(timezone.utc)
         )
+
+    def HomeGantry(self, *, metadata: Dict[FullyQualifiedIdentifier, Any]) -> int:
+        try:
+            if not os.path.exists("{USER_STORAGE_DIR}protocol_homegantry.py"):
+                script_opentrons: str = "from opentrons import protocol_api \nmetadata = {\"apiLevel\": \"2.8\",\"protocolName\": \"home\",\"description\": \".\"} \ndef run(protocol: protocol_api.ProtocolContext):\n\tprotocol.home()"
+                self.ssh.exec_command(f"echo -e '{str(script_opentrons)}' > {USER_STORAGE_DIR}protocol_homegantry.py")
+        except FileExistsError:
+            pass
+
+        cmd: str = f"python3 -m opentrons.execute {USER_STORAGE_DIR}protocol_homegantry.py"
+
+        self.__logger.debug(f"run '{cmd}'")
+        ssh_stdin, ssh_stdout, ssh_stderr = self.ssh.exec_command(cmd)
+
+        at_home: int = ssh_stdout.channel.recv_exit_status()
+        self.__logger.debug("run returned '" + str(at_home) + "'")
+
+        if at_home != 0:
+            raise ValueError("Home gantry was not successful.")
 
     def __del__(self):
         # Close connection

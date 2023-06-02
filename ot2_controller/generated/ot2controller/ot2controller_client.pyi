@@ -53,3 +53,10 @@ class Ot2ControllerClient:
         A current video from the inside of the OT-2 made with the built-in camera.
         """
         ...
+    def HomeGantry(
+        self, *, metadata: Optional[Iterable[ClientMetadataInstance]] = None
+        ) -> ReturnAtHome_Responses:
+        """
+        Return at home the robot
+        """
+        ...

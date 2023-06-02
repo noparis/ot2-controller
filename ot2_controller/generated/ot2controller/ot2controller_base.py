@@ -92,3 +92,14 @@ class Ot2ControllerBase(FeatureImplementationBase, ABC):
         :return: A current movie from the inside of the OT-2 made with the built-in camera.
         """
         pass
+
+    @abstractmethod
+    def HomeGantry(self, *, metadata: Dict[FullyQualifiedIdentifier, Any]) -> int:
+        """
+        Return at home the robot
+
+        :param metadata: The SiLA Client Metadata attached to the call
+
+        :return: ReturnValue: The returned value from the executed
+        """
+        pass

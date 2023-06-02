@@ -165,6 +165,20 @@
       </DataType>
     </Response>
   </Command>
+  <Command>
+    <Identifier>HomeGantry</Identifier>
+    <DisplayName>Home Gantry</DisplayName>
+    <Description>To return the Opentrons on top of the trash.</Description>
+    <Observable>No</Observable>
+    <Response>
+      <Identifier>ReturnValue</Identifier>
+      <DisplayName>Return Value</DisplayName>
+      <Description>The returned value from the executed command.</Description>
+      <DataType>
+        <Basic>Integer</Basic>
+      </DataType>
+    </Response>
+  </Command>
   <DefinedExecutionError>
     <Identifier>UploadFileFailed</Identifier>
     <DisplayName>Upload File Failed</DisplayName>
